@@ -16,12 +16,12 @@ import { User } from '../../../shared/models/user';
 export class WeatherComponent implements OnInit {
 
   username: string = '';
-  weatherData: Object[] = [];
-  dayBydayData: Object = {};
   chartData: Object[] = [];
-  selectedCityTab: FormControl = new FormControl(0);
-  selectedDayTab: FormControl = new FormControl(0);
-  inputErrorMessage: string = '';
+  private weatherData: Object[] = [];
+  private dayBydayData: Object = {};
+  private selectedCityTab: FormControl = new FormControl(0);
+  private selectedDayTab: FormControl = new FormControl(0);
+  private inputErrorMessage: string = '';
 
   constructor(
     private dataAccessService: DataAccessService,
@@ -29,7 +29,6 @@ export class WeatherComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
     this.username = this.authenticationService.getCurrentUsername;
     this.authenticationService.getCurrentUserData()
       .pipe(take(1))
@@ -48,8 +47,8 @@ export class WeatherComponent implements OnInit {
   }
 
 
-  callGetWeatherAndForecast(cities:number[]) {
-    this.getWeatherAndForecast(cities).subscribe((weatherData:Object[]) => {
+  callGetWeatherAndForecast(cities: number[]): void {
+    this.getWeatherAndForecast(cities).subscribe((weatherData: Object[]) => {
       this.weatherData = this.weatherData.concat(this.filterWeatherData(weatherData));
     })
   }
@@ -64,13 +63,13 @@ export class WeatherComponent implements OnInit {
           alert(`${data['name']} is already in your list!`);
           this.selectedCityTab.setValue(indexOfCity)
         } else {
-          this.getWeatherAndForecast([data['id']]).subscribe((weatherData:Object[]) => {
+          this.getWeatherAndForecast([data['id']]).subscribe((weatherData: Object[]) => {
             this.weatherData = this.weatherData.concat(this.filterWeatherData(weatherData));
             this.selectedCityTab.setValue(this.weatherData.length - 1)
             this.authenticationService.updateCurrentUsersCities({ add: data['id'] })
-          },error => alert(error))
+          }, error => alert(error))
         }
-      },error => alert(error))
+      }, error => alert(error))
     }, error => {
       if (error.status === 404) {
         this.inputErrorMessage = 'There is no city called ' + newCity + '!'
@@ -88,7 +87,6 @@ export class WeatherComponent implements OnInit {
 
 
   createDayByDayForecast(data: Object[]): Object {
-
     let dayByDayData: Object = {}
     for (let i: number = 0; i < data.length; i++) {
       if (Object.keys(dayByDayData).includes(data[i]['dt_txt'].split(' ')[0])) {
@@ -98,7 +96,7 @@ export class WeatherComponent implements OnInit {
       }
     }
 
-    let keys:string[] = Object.keys(dayByDayData)
+    let keys: string[] = Object.keys(dayByDayData)
     let result: Object = {}
     for (let i: number = 0; i < keys.length; i++) {
       if (dayByDayData[keys[i]].length === 8) {
@@ -127,12 +125,14 @@ export class WeatherComponent implements OnInit {
     return result
   }
 
-  removeCity(cityID: number, index: number) {
+
+  removeCity(cityID: number, index: number): void {
     this.authenticationService.updateCurrentUsersCities({ remove: cityID })
     this.weatherData.splice(index, 1);
   }
 
-  onLogout() {
+
+  onLogout(): void {
     this.authenticationService.logout()
   }
 

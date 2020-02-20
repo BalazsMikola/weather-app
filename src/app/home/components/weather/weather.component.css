@@ -70,3 +70,7 @@ h3{
   font-size: 60px;
   color: rgb(189, 11, 11);
 }
+
+.disable{
+  color: rgb(211, 180, 180);
+}

@@ -50,7 +50,7 @@
               class="delete-tab-button"
               [disabled]="weatherData.length === 1"
               (click)="removeCity(data.id,index)">
-              <i class="material-icons deleteIcon">delete_forever</i>
+              <i class="material-icons deleteIcon" [class.disable]="weatherData.length === 1">delete_forever</i>
             </button>
           </div>
         </div>

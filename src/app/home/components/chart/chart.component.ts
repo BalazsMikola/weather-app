@@ -39,6 +39,4 @@ export class ChartComponent implements OnInit {
     this.yScaleMin = Math.min(...temperatures)
   }
 
-
-
 }

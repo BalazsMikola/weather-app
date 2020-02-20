@@ -10,7 +10,7 @@ import { DataAccessService } from '../http/data-access.service';
 })
 export class AuthenticationService {
 
-  private currentUserDataSubject:BehaviorSubject<User>  = new BehaviorSubject(null)
+  private currentUserDataSubject: BehaviorSubject<User> = new BehaviorSubject(null)
   public currentUserData: Observable<User> = this.currentUserDataSubject.asObservable();
 
   constructor(
@@ -23,41 +23,38 @@ export class AuthenticationService {
     return localStorage.getItem('currentUsername');
   }
 
+  
   getCurrentUserData(): Observable<User> {
     return this.currentUserDataSubject
   }
 
-  resetCurrentUserDataSubject(userData:User) {
+
+  resetCurrentUserDataSubject(userData: User) {
     this.currentUserDataSubject.next(userData)
   }
 
 
-  settingsAfterLogin(message:string, userData:User): void{
-
+  settingsAfterLogin(message: string, userData: User): void {
     localStorage.setItem('currentUsername', userData['username']);
     this.currentUserDataSubject.next(userData)
     this.router.navigate(['/']);
   }
 
 
-  updateCurrentUsersCities(order:Object) {
-
+  updateCurrentUsersCities(order: Object): void {
     let { username, password, cities } = this.currentUserDataSubject['value']
-
-    if(order['add']){
+    if (order['add']) {
       cities.push(order['add'])
-    }else{
-      cities.splice(cities.indexOf(order['remove']),1)
+    } else {
+      cities.splice(cities.indexOf(order['remove']), 1)
     }
-
-    this.dataAccessService.updateUsersCities(username, password, cities).then(() => {})
-    .catch((error:Error) => alert('Something went wrong! Please try again later. ' + error))
+    this.dataAccessService.updateUsersCities(username, password, cities).then(() => { })
+      .catch((error: Error) => alert('Something went wrong! Please try again later. ' + error))
   }
 
 
-  login(username: string, password: string) {
-
-    this.dataAccessService.getUserDataFromDB(username).then((userData:User) => {
+  login(username: string, password: string): void {
+    this.dataAccessService.getUserDataFromDB(username).then((userData: User) => {
       if (userData) {
         if (userData['password'] === password) {
           this.settingsAfterLogin('Welcome ', userData);
@@ -66,15 +63,15 @@ export class AuthenticationService {
         }
       } else {
         this.dataAccessService.addNewUser(username, password)
-        .then((newUserData:User) => this.settingsAfterLogin('Successfully registered! Welcome ', newUserData))
-        .catch((error:Error) => alert('Something went wrong! Please try again later. ' + error))
+          .then((newUserData: User) => this.settingsAfterLogin('Successfully registered! Welcome ', newUserData))
+          .catch((error: Error) => alert('Something went wrong! Please try again later. ' + error))
       }
     })
-    .catch((error:Error) => alert('Something went wrong! Please try again later. ' + error))
+      .catch((error: Error) => alert('Something went wrong! Please try again later. ' + error))
   }
 
 
-  logout() {
+  logout(): void {
     localStorage.removeItem('currentUsername');
     this.router.navigate(['/login']);
   }

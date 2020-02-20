@@ -10,8 +10,8 @@ import { AuthenticationService } from '../../../core/authentication/authenticati
 })
 export class LoginComponent implements OnInit {
 
-  loginForm: FormGroup;
   submitted = false;
+  private loginForm: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -29,14 +29,12 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  onLoginSubmit() {
-
+  onLoginSubmit(): void {
     this.submitted = true;
     if(this.loginForm.invalid) {
       return;
     }
     this.authenticationService.login(this.form.username.value, this.form.password.value)
-    
   }
 
 }
